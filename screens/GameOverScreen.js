@@ -1,14 +1,33 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import * as Device from "expo-device";
 
 import Colors from "../constants/Colors";
 import Title from "../components/ui/Title";
 import PrimaryButton from "../components/ui/PrimaryButton";
 
 export default function GameOverScreen({ userNumber, count, onStartNewGame }) {
+  const { height } = useWindowDimensions();
+
+  const dynamicPropertiesContainer = {
+    marginTop: height < 400 ? 16 : 100,
+  };
+  const dynamicPropertiesImageContainer = {
+    width: height < 400 ? 120 : 200,
+    height: height < 400 ? 120 : 200,
+    borderRadius: height < 400 ? 60 : 100,
+    margin: height < 400 ? 8 : 30,
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, dynamicPropertiesContainer]}>
       <Title>Game Over!</Title>
-      <View style={styles.imageContainer}>
+      <View style={[styles.imageContainer, dynamicPropertiesImageContainer]}>
         <Image
           style={styles.image}
           source={require("../assets/images/success.png")}
@@ -27,15 +46,10 @@ export default function GameOverScreen({ userNumber, count, onStartNewGame }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 100,
     alignItems: "center",
   },
   imageContainer: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
     overflow: "hidden",
-    margin: 30,
   },
   image: {
     width: "100%",
@@ -44,15 +58,12 @@ const styles = StyleSheet.create({
   text: {
     padding: 12,
     fontFamily: "poppins-regular",
-    fontSize: 20,
+    fontSize: Device.deviceType === 2 ? 32 : 20,
     textAlign: "center",
     marginBottom: 16,
   },
   highlight: {
     fontFamily: "poppins-medium",
     color: Colors.primary500,
-  },
-  button: {
-    height: "2%",
   },
 });

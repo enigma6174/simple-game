@@ -1,4 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
+import * as Device from "expo-device";
+
 import Colors from "../../constants/Colors";
 
 export default function Card(props) {
@@ -10,23 +12,26 @@ export default function Card(props) {
   );
 }
 
+const deviceType = Device.deviceType;
+
 const styles = StyleSheet.create({
   container: {
+    height: deviceType === 2 ? 280 : 200,
     justifyContent: "center",
     alignItems: "center",
     padding: 24,
     marginHorizontal: 24,
     backgroundColor: Colors.primary800,
     borderRadius: 8,
-    elevation: 4, // only works on Android
-    shadowColor: "black", // only works on iOS
-    shadowOffset: { width: 0, height: 2 }, // only works on iOS
-    shadowRadius: 6, // only works on iOS
-    shadowOpacity: 0.25, // only works on iOS
+    elevation: 4,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    shadowOpacity: 0.25,
   },
   title: {
     color: Colors.white,
-    fontSize: 24,
+    fontSize: deviceType === 2 ? 42 : 24,
     fontFamily: "poppins-semi-bold",
   },
 });

@@ -1,12 +1,23 @@
 import { useState } from "react";
-import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  TextInput,
+  View,
+  useWindowDimensions,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
+import * as Device from "expo-device";
 
-import PrimaryButton from "../components/ui/PrimaryButton";
 import Colors from "../constants/Colors";
 import Card from "../components/ui/Card";
+import PrimaryButton from "../components/ui/PrimaryButton";
 
 export default function StartGameScreen({ onConfirmNumber }) {
   const [inputValue, setInputValue] = useState("");
+
+  const { height } = useWindowDimensions();
 
   function inputHandler(value) {
     setInputValue(value);
@@ -32,56 +43,64 @@ export default function StartGameScreen({ onConfirmNumber }) {
     onConfirmNumber(number);
   }
 
+  const marginTopDistance = height < 380 ? 30 : 100;
+
   return (
-    <View style={styles.container}>
-      <Card title={"Enter A Number"}>
-        <TextInput
-          style={styles.textInput}
-          maxLength={2}
-          keyboardType={"numeric"}
-          autoCapitalize={"none"}
-          autoCorrect={false}
-          value={inputValue}
-          onChangeText={inputHandler}
-        />
-        <View style={styles.buttonContainer}>
-          <View style={styles.buttonSpace}>
-            <PrimaryButton onPress={restInputHandler}>Reset</PrimaryButton>
-          </View>
-          <View style={styles.buttonSpace}>
-            <PrimaryButton
-              onPress={confirmBtnHandler}
-              disabled={inputValue === ""}
-            >
-              Confirm
-            </PrimaryButton>
-          </View>
+    <ScrollView style={styles.screen}>
+      <KeyboardAvoidingView style={styles.screen} behavior={"position"}>
+        <View style={[styles.container, { marginTop: marginTopDistance }]}>
+          <Card title={"Enter A Number"}>
+            <TextInput
+              style={styles.textInput}
+              maxLength={2}
+              keyboardType={"numeric"}
+              autoCapitalize={"none"}
+              autoCorrect={false}
+              value={inputValue}
+              onChangeText={inputHandler}
+            />
+            <View style={styles.buttonContainer}>
+              <View style={styles.buttonSpace}>
+                <PrimaryButton onPress={restInputHandler}>Reset</PrimaryButton>
+              </View>
+              <View style={styles.buttonSpace}>
+                <PrimaryButton
+                  onPress={confirmBtnHandler}
+                  disabled={inputValue === ""}
+                >
+                  Confirm
+                </PrimaryButton>
+              </View>
+            </View>
+          </Card>
         </View>
-      </Card>
-    </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
+const deviceType = Device.deviceType;
+
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     marginTop: 100,
     alignItems: "center",
+    marginHorizontal: deviceType === 2 ? 120 : 0,
   },
   textInput: {
-    height: 50,
-    width: 50,
-    fontSize: 32,
+    height: deviceType === 2 ? 64 : 48,
+    width: deviceType === 2 ? 78 : 48,
+    fontSize: deviceType === 2 ? 56 : 32,
     borderBottomColor: Colors.accent500,
     borderBottomWidth: 2,
     color: Colors.accent500,
     marginVertical: 8,
     fontWeight: "bold",
     textAlign: "center",
-  },
-  textMessage: {
-    color: Colors.white,
-    fontSize: 24,
   },
   buttonContainer: {
     flexDirection: "row",
