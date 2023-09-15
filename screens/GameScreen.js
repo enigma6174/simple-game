@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Alert, Platform, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  Platform,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from "react-native";
+import * as Device from "expo-device";
 
 import Title from "../components/ui/Title";
 import generateRandomNumber from "../utils/Random";
@@ -13,6 +20,8 @@ let currentMax = 100;
 export default function GameScreen({ userNumber, onGuessRound, onGameOver }) {
   const initialGuess = generateRandomNumber(1, 100, userNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
+
+  const { height } = useWindowDimensions();
 
   useEffect(() => {
     if (currentGuess === userNumber) onGameOver();
@@ -42,12 +51,19 @@ export default function GameScreen({ userNumber, onGuessRound, onGameOver }) {
     onGuessRound((current) => current + 1);
   }
 
+  const paddingTopDistance =
+    height < 400 ? 20 : Platform.OS === "ios" ? 20 : 75;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: paddingTopDistance }]}>
       <Title>My Guess</Title>
       <NumberContainer>{currentGuess}</NumberContainer>
       <View>
-        <Card title={"Higher Or Lower?"} textStyle={styles.cardTitle}>
+        <Card
+          title={"Higher Or Lower?"}
+          style={styles.cardStyle}
+          textStyle={styles.cardTitle}
+        >
           <View style={styles.btnContainer}>
             <View style={styles.btnSpace}>
               <PrimaryButton onPress={() => guessNewNumber("higher")}>
@@ -66,20 +82,24 @@ export default function GameScreen({ userNumber, onGuessRound, onGameOver }) {
   );
 }
 
+const deviceType = Device.deviceType;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: Platform.OS === "ios" ? 20 : 75,
   },
   btnContainer: {
     flexDirection: "row",
-    marginTop: 16,
+    marginTop: deviceType === 2 ? 48 : 16,
   },
   btnSpace: {
     flex: 1,
   },
   cardTitle: {
-    marginBottom: 12,
+    marginBottom: deviceType === 2 ? 32 : 12,
+  },
+  cardStyle: {
+    height: deviceType === 2 ? 300 : 150,
   },
 });

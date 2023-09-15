@@ -1,4 +1,6 @@
-import { Text, View, Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import * as Device from "expo-device";
+
 import Colors from "../../constants/Colors";
 
 export default function PrimaryButton(props) {
@@ -34,6 +36,7 @@ const styles = StyleSheet.create({
     color: Colors.white,
     textAlign: "center",
     fontFamily: "poppins-medium",
+    fontSize: Device.deviceType === 2 ? 24 : 14,
   },
   pressed: {
     opacity: 0.75,
